@@ -5,12 +5,22 @@
     --bg-color: #2c2c2c; 
     --card-bg: #5c5c5c; /* Gris mucho más claro para las tarjetas */
     --white: #ffffff;
+    --nav-h: 110px; /* altura aproximada de la barra fija */
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+/* Scroll por secciones (portada / carta / info) y la barra fija no tapa los títulos.
+   "proximity" = engancha solo cuando paras cerca del inicio de una sección,
+   así la carta (que es larga) se puede recorrer con total libertad. */
+html {
+    scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--nav-h);
 }
 
 body {
@@ -84,8 +94,8 @@ body {
 /* Cabecera (Hero Section) */
 .hero {
     position: relative;
-    height: 70vh;
-    min-height: 500px;
+    min-height: 100vh;
+    min-height: 100svh; /* Portada a pantalla completa */
     background-image: url('equipo.kim.jpeg');
     background-size: cover;
     background-position: center 15%; 
@@ -93,8 +103,9 @@ body {
     align-items: flex-end; /* Esto empuja el texto hacia la parte de abajo de la foto */
     justify-content: center;
     text-align: center;
-    margin-top: 60px; 
-    padding-bottom: 4rem; /* Añade un margen para que no quede pegado al borde inferior */
+    padding-top: var(--nav-h); /* deja sitio a la barra fija */
+    padding-bottom: 4rem;
+    scroll-snap-align: start;
 }
 
 .hero-overlay {
@@ -291,6 +302,44 @@ body {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
+/* Banner de valoración de Google (centrado) */
+.review-banner {
+    background: var(--card-bg);
+    border: 2px solid #4285F4; /* Borde azul para destacar */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    padding: 2rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.review-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+/* Botón especial para reseñas de Google */
+.review-box {
+    border: 2px solid #4285F4; /* Borde azul para destacar */
+}
+
+.review-btn {
+    margin-top: 1rem;
+    background-color: #4285F4; /* Azul Google */
+    color: #ffffff;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+}
+
+.review-btn:hover {
+    background-color: #3367d6;
+    color: #ffffff;
+}
+
 .info-box h3 {
     color: var(--primary-color);
     margin-bottom: 1rem;
@@ -306,9 +355,64 @@ footer {
 }
 
 /* =========================================
+   PANELES (scroll por secciones)
+   ========================================= */
+.panel {
+    min-height: calc(100vh - var(--nav-h));
+    min-height: calc(100svh - var(--nav-h));
+    scroll-snap-align: start;
+}
+
+/* La foto <img> solo se usa en móvil (en ordenador la foto va de fondo) */
+.hero-photo {
+    display: none;
+}
+
+/* Banner de valoración dentro de la portada */
+.hero .review-banner {
+    max-width: 460px;
+    margin: 2rem auto 0;
+    padding: 1.2rem 1.5rem;
+}
+
+/* El texto del banner no debe heredar el tamaño grande de ".hero p" */
+.hero .review-content p {
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+/* Último panel: info centrada y footer pegado abajo */
+.panel-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.panel-info .container {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.panel-info .info-section {
+    margin-top: 0;
+}
+
+.panel-info footer {
+    margin-top: 0;
+}
+
+/* =========================================
    ADAPTACIÓN PARA MÓVILES (RESPONSIVE)
    ========================================= */
 @media (max-width: 768px) {
+    /* Barra fija más alta en móvil */
+    :root {
+        --nav-h: 130px;
+    }
+
     /* 1. Barra de navegación: Centramos el logo y los enlaces */
     .nav-content {
         flex-direction: column;
@@ -327,13 +431,11 @@ footer {
 
     /* 2. Cabecera (Foto del equipo): Equilibrio de altura y encuadre para móvil */
     .hero {
-        height: 55vh; /* Altura intermedia y proporcionada */
-        min-height: 400px;
-        margin-top: 80px; 
-        background-size: cover; /* Volvemos a cubrir el área para no dejar huecos */
-        background-position: center 10%; /* Enfocamos la parte superior central para salvar las caras */
+        min-height: 100svh; /* Portada a pantalla completa */
+        background-image: none; /* En móvil la foto va dentro del HTML (<img>) para verse completa */
+        background-color: var(--bg-color);
         padding-bottom: 2.5rem;
-        align-items: flex-end; /* Empujamos el texto hacia abajo del todo */
+        align-items: center; /* Todo el bloque centrado debajo de la barra */
     }
     
     .hero h1 {
@@ -345,6 +447,38 @@ footer {
         font-size: 1.1rem;
         margin-bottom: 1.5rem;
     }
+
+    /* Foto completa en móvil con el título DENTRO de la imagen */
+    .hero-overlay {
+        display: none; /* El oscurecido lo hace el degradado de .hero-text */
+    }
+    .hero-content {
+        width: 100%;
+        padding: 0;
+    }
+    .hero-photo {
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: brightness(0.8);
+    }
+    .hero-title {
+        position: relative;
+    }
+    .hero-text {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 3rem 1rem 1rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+    }
+    .hero-text p {
+        margin-bottom: 0;
+    }
+    .hero-actions {
+        padding: 1.5rem 1rem 0;
+    }
     .btn {
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
@@ -353,6 +487,14 @@ footer {
     /* 3. Carta y Tarjetas: Ajustamos márgenes para aprovechar la pantalla */
     .container {
         padding: 2rem 1rem; /* Reducimos los márgenes laterales */
+    }
+    .review-banner {
+        padding: 1.5rem 1rem;
+        margin-bottom: 2rem;
+    }
+    .hero .review-banner {
+        margin: 1.5rem auto 0;
+        padding: 1rem;
     }
     .section-title {
         font-size: 2rem;
