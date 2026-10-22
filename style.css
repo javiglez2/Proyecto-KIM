@@ -325,17 +325,21 @@ footer {
         font-size: 0.95rem; /* Letra un poco más pequeña */
     }
 
-    /* 2. Cabecera (Foto del equipo): Reducimos textos gigantes */
+    /* 2. Cabecera (Foto del equipo): Equilibrio de altura y encuadre para móvil */
     .hero {
-        height: 60vh;
+        height: 55vh; /* Altura intermedia y proporcionada */
         min-height: 400px;
-        margin-top: 90px; /* Ajuste para la nueva barra apilada */
-        background-position: center top; /* Aseguramos que se vean las caras en vertical */
-        padding-bottom: 2rem;
+        margin-top: 80px; 
+        background-size: cover; /* Volvemos a cubrir el área para no dejar huecos */
+        background-position: center 10%; /* Enfocamos la parte superior central para salvar las caras */
+        padding-bottom: 2.5rem;
+        align-items: flex-end; /* Empujamos el texto hacia abajo del todo */
     }
+    
     .hero h1 {
-        font-size: 2.5rem; /* Bajamos el tamaño para que no se salga de la pantalla */
+        font-size: 2rem;
         line-height: 1.2;
+        margin-bottom: 0.5rem;
     }
     .hero p {
         font-size: 1.1rem;
